@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{{ page.title }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/zui.css">
+
+    </head>
+    <body>
+      
+      <div class="row">
+
+        <div class="col-xs-12">
+          <header id="header">
+              <div id="masthead"></div>    
+              <nav id="nav">
+                <ul class="list-unstyled list-inline">
+                  <li>Home</li>
+                  <li>Training</li>
+                  <li>Consulting</li>
+                  <li>Reports</li>
+                  <li>Articles</li>
+                  <li>About ZUI</li>
+                </ul>
+              </nav>
+          </header>
+        </div>
+      
+        <div class="col-xs-4">
+          <aside id="sidebar" class="u-zui-region">
+            <h3 class="h3">Topics</h3>
+            <ul class="list-unstyled">
+              <li><a href="#">E-commerce</a></li>
+              <li><a href="#">Intranets</a></li>
+              <li><a href="#">Mobile & Tablet</a></li>
+              <li><a href="#">User Testing</a></li>
+              <li><a href="#">Web Usability</a></li>
+              <li><a href="#"><strong>See all topics...</strong></a></li>
+            </ul>
+
+            <h3 class="h3">Author</h3>
+            <ul class="list-unstyled">
+              <li><a href="#">Jakob Nielsen</a></li>
+              <li><a href="#">Don Norman</a></li>
+              <li><a href="#">Bruce "Tog" Tognazzini</a></li>
+              <li><a href="#"><strong>See all authors...</strong></a></li>
+            </ul>
+
+            <h3 class="h3">Recent Articles</h3>
+            <ul class="list-unstyled">
+              <li><a href="#">User Intent Affects Filter Design</a></li>
+              <li><a href="#">Usability Testing of Icons</a></li>
+              <li><a href="#">Voice Interaction UX: Brave New World... Same Old Story</a></li>
+              <li><a href="#"><strong>See all articles...</strong></a></li>
+            </ul>                     
+          </aside>
+        </div>
+        
+        <div class="col-xs-8">
+          <main id="main" class="u-zui-region">
+            {{ content }}
+          </main>
+        </div>
+      </div>
+    
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/hammerjs/2.0.6/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.hammerjs/2.0.0/jquery.hammer.js"></script>
+    <script src="/js/main.js"></script>
+    </body>
+</html>
