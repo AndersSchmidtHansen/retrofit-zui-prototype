@@ -18,7 +18,7 @@ html, body {
 
 body {
   background-color: black;
-  font: 1.618rem Helvetica, Arial, sans-serif; }
+  font: 1.412rem Helvetica, Arial, sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
   font-size: 100%; }
@@ -415,7 +415,14 @@ body {
   height: 105px; }
 
 #nav {
-  height: 40px; }
+  height: 35px;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid gainsboro; }
+  #nav ul {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.618rem;
+    margin-bottom: 0; }
 
 #sidebar {
   min-height: 50rem; }

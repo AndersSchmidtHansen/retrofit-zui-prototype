@@ -76,8 +76,7 @@ $(function(){
 
     var $ZUIZoomedInStyles = {
       'transform': 'scale(2) translateZ(0)',
-      'transform-origin': $ZUITargetXPosition + 'px ' + $ZUITargetYPosition + 'px',
-      'overflow-x': 'hidden'
+      'transform-origin': $ZUITargetXPosition + 'px ' + $ZUITargetYPosition + 'px'
     }
 
     if ( $ZUIDoubleTap ) {
@@ -154,10 +153,13 @@ $(function(){
     if ( $ZUIState.zoomed_in ) {
       $ZUIBody
       .css($ZUISwipeRightStyles)
+
+      /*
       .stop().animate({
         scrollTop: 0,
         scrollLeft: 0
       }, 800)
+      */
     }
   }
 
