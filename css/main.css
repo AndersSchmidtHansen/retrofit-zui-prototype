@@ -429,6 +429,11 @@ body {
   #sidebar h2,
   #sidebar h3 {
     margin-top: 0; }
+  #sidebar h3 {
+    font-weight: 700;
+    font-size: 1.618rem; }
+  #sidebar h3 ~ h3 {
+    margin-top: 2.5rem; }
 
 #main {
   min-height: 50rem; }
@@ -440,3 +445,7 @@ ul {
   line-height: 1.818; }
   ul + ul {
     margin-top: 2rem; }
+
+.article-title {
+  font-size: 2rem;
+  font-weight: 700; }
