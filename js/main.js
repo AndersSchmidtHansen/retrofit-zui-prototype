@@ -2,10 +2,12 @@ $(function(){
 
   $ZUIState = {
     zoomed_in: false,
-    current_region_index: 0
+    current_region_index: 0,
+    times: 0
   }
 
   $ZUIDocument = $(document)
+  $ZUIWindow = $(window)
   $ZUIHtml = $('html')
   $ZUIBody = $('body')
   $ZUIRegion = $('.u-zui-region')
@@ -20,14 +22,15 @@ $(function(){
       'transform-origin': '0px 0px',
       'transform': 'scale(1)'
     }
+    location.hash = '#0'
+
     $ZUIRegion.each(function(){
       $(this).css('transform', 'translateZ(0)')
     })
     $ZUIBody.css($ZUIInitialBodyStyles)
 
-
     var $ZUICloseStyles = {
-      'top': '15px',
+      'bottom': '15px',
       'right': '15px',
       'width': '48px',
       'height': '48px',
@@ -50,6 +53,20 @@ $(function(){
     $ZUIClose.on('touchstart click', $ZUIZoomOutHandler)
   }
 
+  var $ZUIPageStateHandler = function() {
+    
+    if (location.hash.length > 0) {
+      $ZUIState.times = parseInt(location.hash.replace('#', ''), 10)
+
+      if ( $ZUIState.times == 0 ) {
+        $ZUIClose.click()
+      }
+
+    } else {
+      $ZUIState.times = 0
+    }
+  }
+
   var $ZUIZoomInHandler = function(event) {
     var $ZUITaps = event.gesture.tapCount
     var $ZUIDoubleTap = ( $ZUITaps == 2 ) ? true : false
@@ -64,13 +81,17 @@ $(function(){
     }
 
     if ( $ZUIDoubleTap ) {
-      if ( !$ZUIState.zoomed_in ) { 
+      if ( !$ZUIState.zoomed_in ) {
+
+        $ZUIState.times = 1
+        location.hash = $ZUIState.times
+
         $ZUIBody.css($ZUIZoomedInStyles)
         $ZUIState.zoomed_in = true
         $ZUICurrentRegion.addClass('u-zui-region--in-focus')
 
         $ZUIClose.css({
-          'top': ($ZUIHtml.offset().top + 15) + 'px',
+          'bottom': ($ZUIHtml.offset().top + 15) + 'px',
           'right': ($ZUIHtml.offset().left + 15) + 'px'
         }).fadeIn()
       }
@@ -78,12 +99,18 @@ $(function(){
   }
 
   var $ZUIZoomOutHandler = function(event) {
+    event.preventDefault()
+
     var $ZUIZoomedOutStyles = {
       'transform': 'scale(1) translateZ(0)',
       'transform-origin': '0px 0px'
     }
 
     if ( $ZUIState.zoomed_in ) {
+
+      $ZUIState.times = 0
+      location.hash = $ZUIState.times
+
       $ZUIBody.css($ZUIZoomedOutStyles)
       $ZUIState.zoomed_in = false
       $('.u-zui-region--in-focus').removeClass('u-zui-region--in-focus')
@@ -105,10 +132,14 @@ $(function(){
     if ( $ZUIState.zoomed_in ) {
       $ZUIBody
       .css($ZUISwipeLeftStyles)
+      
+      /*
       .stop().animate({
         scrollTop: 0,
         scrollLeft: 0
       }, 800)
+      */
+
     }
   }
 
@@ -132,6 +163,7 @@ $(function(){
 
   // Initializing
   $ZUIDocument.on('ready', $ZUIInitHandler)
+  $ZUIWindow.on('hashchange', $ZUIPageStateHandler)
 
   // Handle Zooming In
   $ZUIRegion
