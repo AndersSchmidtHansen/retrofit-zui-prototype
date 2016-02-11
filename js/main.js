@@ -159,11 +159,18 @@ $(function(){
         scrollLeft: 0
       }, 800)
     }
-  }  
+  }
+
+  var $ZUIKeyboardHandler = function(event) {
+    if (event.keyCode === 27) {
+      $ZUIClose.click()
+    }
+  } 
 
   // Initializing
   $ZUIDocument.on('ready', $ZUIInitHandler)
   $ZUIWindow.on('hashchange', $ZUIPageStateHandler)
+  $ZUIBody.on('keyup', $ZUIKeyboardHandler)
 
   // Handle Zooming In
   $ZUIRegion
@@ -171,7 +178,5 @@ $(function(){
   .on('tap', $ZUIZoomInHandler)
   .on('swipeleft', $ZUISwipeLeftHandler)
   .on('swiperight', $ZUISwipeRightHandler)
-
-
 
 })
