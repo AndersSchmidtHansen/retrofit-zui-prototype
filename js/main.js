@@ -40,7 +40,9 @@ $(function(){
 
     $ZUIRegion.each(function(index){
       $(this)
-      .css('transform', 'translateZ(0)')
+      .css({
+        'transform': 'translateZ(0)'
+      })
       .attr('data-zui-id', index++)
       $ZUIState.zui_regions.push($(this))
     })
@@ -114,9 +116,10 @@ $(function(){
     
     $ZUIState.position.x += ($ZUICurrentRegion.offset().left) - $ZUIState.zoom_offset
     $ZUIState.position.y += ($ZUICurrentRegion.offset().top) - $ZUIState.zoom_offset
+    $ZUIState.scale = 2
 
     var $ZUIZoomedInStyles = {
-      'transform': 'scale(2) translateZ(0)',
+      'transform': 'scale('+ $ZUIState.scale +') translateZ(0)',
       'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
     }
 
@@ -128,7 +131,16 @@ $(function(){
 
         $ZUIBody.css($ZUIZoomedInStyles)
         $ZUIState.zoomed_in = true
+        
         $ZUICurrentRegion.addClass('u-zui-region--in-focus')
+
+
+        if ( $ZUICurrentRegion.hasClass('u-zui-region--will-scale') ) {
+          $ZUIRegionWidth = ($(this).width() / $ZUIState.scale)
+          $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
+        }
+        
+
         $ZUIState.currently_focused_region = $ZUICurrentRegion
         $ZUIState.current_region_index = $ZUICurrentRegion.data('zui-id')
 
@@ -150,6 +162,7 @@ $(function(){
 
     $ZUIState.position.x = 0
     $ZUIState.position.y = 0
+    $ZUIState.scale = 1
 
     var $ZUIZoomedOutStyles = {
       'transform': 'scale(1) translateZ(0)',
@@ -163,7 +176,10 @@ $(function(){
 
       $ZUIBody.css($ZUIZoomedOutStyles)
       $ZUIState.zoomed_in = false
-      $ZUIState.currently_focused_region.removeClass('u-zui-region--in-focus')
+      $ZUIState.currently_focused_region
+      .removeClass('u-zui-region--in-focus')
+      .css('width', 'auto')
+
       $ZUIClose.fadeOut()
     }
   }
