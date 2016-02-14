@@ -408,14 +408,15 @@ body {
   background: white; }
 
 #header {
-  height: 145px;
+  height: auto;
   margin-bottom: 1rem; }
 
 #masthead {
-  height: 105px; }
+  height: auto; }
 
 #nav {
   height: 35px;
+  margin-top: 1rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid gainsboro; }
   #nav ul {
@@ -431,12 +432,18 @@ body {
     margin-top: 0; }
   #sidebar h3 {
     font-weight: 700;
-    font-size: 1.618rem; }
+    font-size: 2.1rem; }
   #sidebar h3 ~ h3 {
     margin-top: 2.5rem; }
+  #sidebar a {
+    font-size: .9rem; }
+  #sidebar ul {
+    line-height: 1; }
 
 #main {
   min-height: 50rem; }
+  #main p {
+    font-size: 1.1rem; }
 
 #main h1 {
   margin-top: 0; }
@@ -447,5 +454,5 @@ ul {
     margin-top: 2rem; }
 
 .article-title {
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 700; }
