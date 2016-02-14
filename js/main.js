@@ -7,7 +7,13 @@ $(function(){
     currently_focused_region: {},
     current_region_index: 0,
     times: 0,
-    zoom_speed: '.75s'
+    zoom_speed: '.75s',
+    zoom_offset: 25,
+    position: {
+      x: 0,
+      y: 0
+    },
+    scale: 1
   }
 
   $ZUIDocument = $(document)
@@ -27,8 +33,8 @@ $(function(){
     var $ZUIInitialBodyStyles = {
       'transition-property': 'transform, transform-origin',
       'transition-duration': $ZUIState.zoom_speed,
-      'transform-origin': '0px 0px',
-      'transform': 'scale(1)'
+      'transform-origin': $ZUIState.position.x + 'px ' + $ZUIState.position.y + 'px',
+      'transform': 'scale(' + $ZUIState.scale + ')'
     }
     location.hash = '#0'
 
@@ -71,6 +77,15 @@ $(function(){
 
   /*
   |----------------------------------------------------------------------
+  | Calculate Coordinate Position
+  |----------------------------------------------------------------------
+  */
+  var $ZUIGetPositions = function(x, y) {
+    return x + 'px ' + y + 'px'
+  }
+
+  /*
+  |----------------------------------------------------------------------
   | Handling Page State - Enables Android Back Buttons To Zoom Out
   |----------------------------------------------------------------------
   */
@@ -96,12 +111,13 @@ $(function(){
     var $ZUITaps = event.gesture.tapCount
     var $ZUIDoubleTap = ( $ZUITaps == 2 ) ? true : false
     var $ZUICurrentRegion = $(event.target)
-    var $ZUITargetXPosition = $ZUICurrentRegion.offset().left
-    var $ZUITargetYPosition = $ZUICurrentRegion.offset().top
+    
+    $ZUIState.position.x = $ZUICurrentRegion.offset().left
+    $ZUIState.position.y = $ZUICurrentRegion.offset().top
 
     var $ZUIZoomedInStyles = {
       'transform': 'scale(2) translateZ(0)',
-      'transform-origin': $ZUITargetXPosition + 'px ' + $ZUITargetYPosition + 'px'
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
     }
 
     if ( $ZUIDoubleTap ) {
@@ -121,8 +137,6 @@ $(function(){
           'right': ($ZUIHtml.offset().left + 15) + 'px'
         }).fadeIn()
       }
-
-      console.log($ZUIState.current_region_index)
     }
   }
 
@@ -134,9 +148,12 @@ $(function(){
   var $ZUIZoomOutHandler = function(event) {
     event.preventDefault()
 
+    $ZUIState.position.x = 0
+    $ZUIState.position.y = 0
+
     var $ZUIZoomedOutStyles = {
       'transform': 'scale(1) translateZ(0)',
-      'transform-origin': '0px 0px'
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
     }
 
     if ( $ZUIState.zoomed_in ) {
@@ -157,18 +174,22 @@ $(function(){
   |--------------------------------------------------------------------------
   */  
   var $ZUISwipeLeftHandler = function(event) {
-    
+
     if ( ($ZUIState.current_region_index + 1) >= $ZUIState.total_zui_regions ) {
       return false
     }
 
-    var $ZUINextXPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index + 1]).offset().left
-    var $ZUINextYPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index + 1]).offset().top
+    $ZUIState.currently_focused_region.removeClass('u-zui-region--in-focus')
+    $ZUIState.currently_focused_region = $ZUIState.zui_regions[$ZUIState.current_region_index + 1]
+    $ZUIState.currently_focused_region.addClass('u-zui-region--in-focus')
+
+    $ZUIState.position.x += ($ZUIState.currently_focused_region.offset().left) - $ZUIState.zoom_offset
+    $ZUIState.position.y += ($ZUIState.currently_focused_region.offset().top) - $ZUIState.zoom_offset
 
     $ZUIState.current_region_index = $ZUIState.current_region_index += 1
 
     var $ZUISwipeLeftStyles = {
-      'transform-origin': $ZUINextXPosition + 'px ' + $ZUINextYPosition + 'px'
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
     }
 
     if ( $ZUIState.zoomed_in ) {
@@ -182,18 +203,22 @@ $(function(){
   |----------------------------------------------------------------------
   */
   var $ZUISwipeRightHandler = function(event) {
-    
+
     if ( $ZUIState.current_region_index <= 0 ) {
       return false
     }
 
-    var $ZUIPrevXPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index - 1]).offset().left
-    var $ZUIPrevYPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index - 1]).offset().top
+    $ZUIState.currently_focused_region.removeClass('u-zui-region--in-focus')
+    $ZUIState.currently_focused_region = $ZUIState.zui_regions[$ZUIState.current_region_index - 1]
+    $ZUIState.currently_focused_region.addClass('u-zui-region--in-focus')
 
     $ZUIState.current_region_index = $ZUIState.current_region_index -= 1
-    
+
+    $ZUIState.position.x = ($ZUIState.position.x + $ZUIState.currently_focused_region.offset().left) - $ZUIState.zoom_offset
+    $ZUIState.position.y = ($ZUIState.position.y + $ZUIState.currently_focused_region.offset().top) - $ZUIState.zoom_offset
+
     var $ZUISwipeRightStyles = {
-      'transform-origin': $ZUIPrevXPosition + 'px ' + $ZUIPrevYPosition + 'px'
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
     }
 
     if ( $ZUIState.zoomed_in ) {
@@ -206,9 +231,7 @@ $(function(){
   | Handle Swiping In General
   |----------------------------------------------------------------------
   */
-  var $ZUISwipeHandler = function(event) {
-    console.log('Should go to position: ' + $ZUIState.current_region_index)
-  }
+  var $ZUISwipeHandler = function(event) {}
 
   /*
   |----------------------------------------------------------------------
