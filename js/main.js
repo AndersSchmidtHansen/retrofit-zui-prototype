@@ -139,7 +139,7 @@ $(function(){
         // This makes wide bodies of content easier to read when
         // zooming in.
         if ( $ZUICurrentRegion.hasClass('u-zui-region--will-scale') ) {
-          $ZUIRegionWidth = ($(this).width() / $ZUIState.scale)
+          $ZUIRegionWidth = ($(this).width() / ($ZUIState.scale - .25) )
           $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
         }
 
@@ -263,9 +263,9 @@ $(function(){
   var $ZUISwipeHandler = function(event) {
     $('.u-zui-region--will-scale').css('width', '')
     $ZUIHtml.css('overflow', '')
-        
+
     if ( $ZUIState.currently_focused_region.hasClass('u-zui-region--will-scale') ) {
-      $ZUIRegionWidth = ($ZUIState.currently_focused_region.width() / $ZUIState.scale)
+      $ZUIRegionWidth = ($ZUIState.currently_focused_region.width() / ($ZUIState.scale - .25) ) 
       $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
     }
 
