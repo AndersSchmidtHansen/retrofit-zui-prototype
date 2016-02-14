@@ -142,6 +142,13 @@ $(function(){
           $ZUIRegionWidth = ($(this).width() / $ZUIState.scale)
           $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
         }
+
+        if ( $ZUICurrentRegion.hasClass('u-zui-region--allow-horizontal-scroll') ) {
+          $ZUIHtml.css({
+            'overflow-x': 'auto',
+            'overflow-y': 'hidden'
+          })
+        }
         
 
         $ZUIState.currently_focused_region = $ZUICurrentRegion
@@ -183,6 +190,8 @@ $(function(){
       $ZUIState.currently_focused_region
       .removeClass('u-zui-region--in-focus')
       .css('width', '')
+
+      $ZUIHtml.css('overflow', '')
 
       $ZUIClose.fadeOut()
     }
@@ -253,9 +262,18 @@ $(function(){
   */
   var $ZUISwipeHandler = function(event) {
     $('.u-zui-region--will-scale').css('width', '')
+    $ZUIHtml.css('overflow', '')
+        
     if ( $ZUIState.currently_focused_region.hasClass('u-zui-region--will-scale') ) {
       $ZUIRegionWidth = ($ZUIState.currently_focused_region.width() / $ZUIState.scale)
       $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
+    }
+
+    if ( $ZUIState.currently_focused_region.hasClass('u-zui-region--allow-horizontal-scroll') ) {
+      $ZUIHtml.css({
+        'overflow-x': 'auto',
+        'overflow-y': 'hidden'
+      })
     }    
   }
 
