@@ -120,7 +120,8 @@ $(function(){
 
     var $ZUIZoomedInStyles = {
       'transform': 'scale('+ $ZUIState.scale +') translateZ(0)',
-      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y),
+      'overflow-x': 'hidden'
     }
 
     if ( $ZUIDoubleTap ) {
@@ -168,7 +169,8 @@ $(function(){
 
     var $ZUIZoomedOutStyles = {
       'transform': 'scale(1) translateZ(0)',
-      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y)
+      'transform-origin': $ZUIGetPositions($ZUIState.position.x, $ZUIState.position.y),
+      'overflow': 'visible'
     }
 
     if ( $ZUIState.zoomed_in ) {
