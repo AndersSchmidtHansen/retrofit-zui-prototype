@@ -112,8 +112,8 @@ $(function(){
     var $ZUIDoubleTap = ( $ZUITaps == 2 ) ? true : false
     var $ZUICurrentRegion = $(event.target)
     
-    $ZUIState.position.x = $ZUICurrentRegion.offset().left
-    $ZUIState.position.y = $ZUICurrentRegion.offset().top
+    $ZUIState.position.x += ($ZUICurrentRegion.offset().left) - $ZUIState.zoom_offset
+    $ZUIState.position.y += ($ZUICurrentRegion.offset().top) - $ZUIState.zoom_offset
 
     var $ZUIZoomedInStyles = {
       'transform': 'scale(2) translateZ(0)',
