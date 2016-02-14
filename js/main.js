@@ -2,8 +2,12 @@ $(function(){
 
   $ZUIState = {
     zoomed_in: false,
+    zui_regions: [],
+    total_zui_regions: 0,
+    currently_focused_region: {},
     current_region_index: 0,
-    times: 0
+    times: 0,
+    zoom_speed: '.75s'
   }
 
   $ZUIDocument = $(document)
@@ -13,20 +17,32 @@ $(function(){
   $ZUIRegion = $('.u-zui-region')
   var $ZUIClose
 
-  
-  // Event Handlers
+  /*
+  |----------------------------------------------------------------------
+  | Initial Set Up
+  |----------------------------------------------------------------------
+  */
   var $ZUIInitHandler = function(event) {
+
     var $ZUIInitialBodyStyles = {
       'transition-property': 'transform, transform-origin',
-      'transition-duration': '1s',
+      'transition-duration': $ZUIState.zoom_speed,
       'transform-origin': '0px 0px',
       'transform': 'scale(1)'
     }
     location.hash = '#0'
 
-    $ZUIRegion.each(function(){
-      $(this).css('transform', 'translateZ(0)')
+    $ZUIRegion.each(function(index){
+      $(this)
+      .css('transform', 'translateZ(0)')
+      .attr('data-zui-id', index++)
+      $ZUIState.zui_regions.push($(this))
     })
+
+    $ZUIState.total_zui_regions = $ZUIState.zui_regions.length
+
+    console.log('There are ' + $ZUIState.total_zui_regions + ' ZUI Regions present on this page.')
+
     $ZUIBody.css($ZUIInitialBodyStyles)
 
     var $ZUICloseStyles = {
@@ -53,8 +69,12 @@ $(function(){
     $ZUIClose.on('touchstart click', $ZUIZoomOutHandler)
   }
 
-  var $ZUIPageStateHandler = function() {
-    
+  /*
+  |----------------------------------------------------------------------
+  | Handling Page State - Enables Android Back Buttons To Zoom Out
+  |----------------------------------------------------------------------
+  */
+  var $ZUIPageStateHandler = function() {    
     if (location.hash.length > 0) {
       $ZUIState.times = parseInt(location.hash.replace('#', ''), 10)
 
@@ -67,6 +87,11 @@ $(function(){
     }
   }
 
+  /*
+  |----------------------------------------------------------------------
+  | Zooming In
+  |----------------------------------------------------------------------
+  */
   var $ZUIZoomInHandler = function(event) {
     var $ZUITaps = event.gesture.tapCount
     var $ZUIDoubleTap = ( $ZUITaps == 2 ) ? true : false
@@ -88,15 +113,24 @@ $(function(){
         $ZUIBody.css($ZUIZoomedInStyles)
         $ZUIState.zoomed_in = true
         $ZUICurrentRegion.addClass('u-zui-region--in-focus')
+        $ZUIState.currently_focused_region = $ZUICurrentRegion
+        $ZUIState.current_region_index = $ZUICurrentRegion.data('zui-id')
 
         $ZUIClose.css({
           'bottom': ($ZUIHtml.offset().top + 15) + 'px',
           'right': ($ZUIHtml.offset().left + 15) + 'px'
         }).fadeIn()
       }
+
+      console.log($ZUIState.current_region_index)
     }
   }
 
+  /*
+  |----------------------------------------------------------------------
+  | Zooming Out
+  |----------------------------------------------------------------------
+  */
   var $ZUIZoomOutHandler = function(event) {
     event.preventDefault()
 
@@ -112,72 +146,94 @@ $(function(){
 
       $ZUIBody.css($ZUIZoomedOutStyles)
       $ZUIState.zoomed_in = false
-      $('.u-zui-region--in-focus').removeClass('u-zui-region--in-focus')
-      $ZUIClose.fadeOut()    
+      $ZUIState.currently_focused_region.removeClass('u-zui-region--in-focus')
+      $ZUIClose.fadeOut()
     }
   }
 
-
-
+  /*
+  |--------------------------------------------------------------------------
+  | Swiping Right To Left
+  |--------------------------------------------------------------------------
+  */  
   var $ZUISwipeLeftHandler = function(event) {
+    
+    if ( ($ZUIState.current_region_index + 1) >= $ZUIState.total_zui_regions ) {
+      return false
+    }
 
-    var $ZUINextXPosition = $ZUIRegion.eq($ZUIState.current_region_index + 1).offset().left
-    var $ZUINextYPosition = $ZUIRegion.eq($ZUIState.current_region_index + 1).offset().top
+    var $ZUINextXPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index + 1]).offset().left
+    var $ZUINextYPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index + 1]).offset().top
+
+    $ZUIState.current_region_index = $ZUIState.current_region_index += 1
 
     var $ZUISwipeLeftStyles = {
       'transform-origin': $ZUINextXPosition + 'px ' + $ZUINextYPosition + 'px'
     }
 
     if ( $ZUIState.zoomed_in ) {
-      $ZUIBody
-      .css($ZUISwipeLeftStyles)
-      
-      /*
-      .stop().animate({
-        scrollTop: 0,
-        scrollLeft: 0
-      }, 800)
-      */
-
+      $ZUIBody.css($ZUISwipeLeftStyles)
     }
   }
 
+  /*
+  |----------------------------------------------------------------------
+  | Swiping From Left To Right
+  |----------------------------------------------------------------------
+  */
   var $ZUISwipeRightHandler = function(event) {
-    var $ZUIBackXPosition = $ZUIRegion.eq($ZUIState.current_region_index - 1).offset().left
-    var $ZUIBackYPosition = $ZUIRegion.eq($ZUIState.current_region_index - 1).offset().top
+    
+    if ( $ZUIState.current_region_index <= 0 ) {
+      return false
+    }
 
+    var $ZUIPrevXPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index - 1]).offset().left
+    var $ZUIPrevYPosition = $($ZUIState.zui_regions[$ZUIState.current_region_index - 1]).offset().top
+
+    $ZUIState.current_region_index = $ZUIState.current_region_index -= 1
+    
     var $ZUISwipeRightStyles = {
-      'transform-origin': $ZUIBackXPosition + 'px ' + $ZUIBackYPosition + 'px'
+      'transform-origin': $ZUIPrevXPosition + 'px ' + $ZUIPrevYPosition + 'px'
     }
 
     if ( $ZUIState.zoomed_in ) {
-      $ZUIBody
-      .css($ZUISwipeRightStyles)
-
-      /*
-      .stop().animate({
-        scrollTop: 0,
-        scrollLeft: 0
-      }, 800)
-      */
+      $ZUIBody.css($ZUISwipeRightStyles)
     }
   }
 
+  /*
+  |----------------------------------------------------------------------
+  | Handle Swiping In General
+  |----------------------------------------------------------------------
+  */
+  var $ZUISwipeHandler = function(event) {
+    console.log('Should go to position: ' + $ZUIState.current_region_index)
+  }
+
+  /*
+  |----------------------------------------------------------------------
+  | Handle Zooming Out With Escape Key
+  |----------------------------------------------------------------------
+  */
   var $ZUIKeyboardHandler = function(event) {
     if (event.keyCode === 27) {
       $ZUIClose.click()
     }
-  } 
+  }
 
-  // Initializing
+  /*
+  |----------------------------------------------------------------------
+  | Initializing
+  |----------------------------------------------------------------------
+  */
   $ZUIDocument.on('ready', $ZUIInitHandler)
   $ZUIWindow.on('hashchange', $ZUIPageStateHandler)
   $ZUIBody.on('keyup', $ZUIKeyboardHandler)
 
-  // Handle Zooming In
   $ZUIRegion
   .hammer()
   .on('tap', $ZUIZoomInHandler)
+  .on('swipe', $ZUISwipeHandler)
   .on('swipeleft', $ZUISwipeLeftHandler)
   .on('swiperight', $ZUISwipeRightHandler)
 

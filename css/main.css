@@ -436,14 +436,14 @@ body {
   #sidebar h3 ~ h3 {
     margin-top: 2.5rem; }
   #sidebar a {
-    font-size: .9rem; }
+    font-size: .8rem; }
   #sidebar ul {
     line-height: 1; }
 
 #main {
   min-height: 50rem; }
   #main p {
-    font-size: 1.1rem; }
+    font-size: .9rem; }
 
 #main h1 {
   margin-top: 0; }
