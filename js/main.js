@@ -135,6 +135,8 @@ $(function(){
         $ZUICurrentRegion.addClass('u-zui-region--in-focus')
 
 
+        // This makes wide bodies of content easier to read when
+        // zooming in.
         if ( $ZUICurrentRegion.hasClass('u-zui-region--will-scale') ) {
           $ZUIRegionWidth = ($(this).width() / $ZUIState.scale)
           $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
@@ -178,7 +180,7 @@ $(function(){
       $ZUIState.zoomed_in = false
       $ZUIState.currently_focused_region
       .removeClass('u-zui-region--in-focus')
-      .css('width', 'auto')
+      .css('width', '')
 
       $ZUIClose.fadeOut()
     }
@@ -247,7 +249,13 @@ $(function(){
   | Handle Swiping In General
   |----------------------------------------------------------------------
   */
-  var $ZUISwipeHandler = function(event) {}
+  var $ZUISwipeHandler = function(event) {
+    $('.u-zui-region--will-scale').css('width', '')
+    if ( $ZUIState.currently_focused_region.hasClass('u-zui-region--will-scale') ) {
+      $ZUIRegionWidth = ($ZUIState.currently_focused_region.width() / $ZUIState.scale)
+      $('.u-zui-region--in-focus').css('width', $ZUIRegionWidth)
+    }    
+  }
 
   /*
   |----------------------------------------------------------------------

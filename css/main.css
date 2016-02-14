@@ -456,3 +456,17 @@ ul {
 .article-title {
   font-size: 2.4rem;
   font-weight: 700; }
+
+.u-zui-region--will-scale {
+  transition: width .28s ease-in-out; }
+
+@media screen and (min-width: 769px) {
+  .article-title {
+    font-size: 2.8rem;
+    line-height: 1.218; }
+  #sidebar li {
+    line-height: 1.618; }
+  #sidebar a {
+    font-size: 1.412rem; }
+  #main p {
+    font-size: 1.618rem; } }
